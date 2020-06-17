@@ -1,0 +1,14 @@
+TC1 line endings counts notes 219
+These are in the Programs\TC1 folder
+Not sure whether these are in either TC1’s original order or the best order
+Count lines
+Count open lines, lines ending with no punctuation.  Either specify a list of punctuation characters or define as any character but a space or a space followed by anything but a line feed [to accommodate space FB dash]?
+Count feminine endings.
+Count lines with feminine endings, that is, ending with an unstressed syllable.  Example: “woman.”  If it ends on a stressed syllable, it’s masculine.  Example:  “man,” but not “gentleman.”
+If the last word in the line ends with any of the specified feminine endings [FEMEND] and is not one of the specified masculine-word exceptions [MASCWRD], it’s a feminine ending.
+If the last word in the line is any of the specified feminine endings words [FEMWRD], it’s a feminine ending.
+Otherwise its ending is masculine.
+Count resulting feminine lines.
+Print Open Line count and percentages:  Open lines:  30/200, 15%
+Print Feminine-Ending count and percentages:  Feminine endings:  25/200, 12.5%
+
