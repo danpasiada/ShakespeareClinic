@@ -6,33 +6,7 @@
 # TODO: acknowledge QT
         
 import string #for string.punctuation
-from PyQt5.QtWidgets import * #for QT
-
-# How this works:
-# 1) count lines in the text
-# 2) count open lines -- i.e. no punctuation at the end 
-# 3) count FEM endings -- i.e. words that end an iambic pentameter (I-5) line on an unstressed syllable, taDA, taDA, taDA, taDA, taDAda. (i.e. an 11th syllable) 
-
-
-# Strategy for FEM endings counting:  
-# ask if text contains specified feminine endings (FEMEND) or feminine words (FEMWRD) which are not listed among masculine-ending (MASCEND) or masculine-word exceptions, report % of feminine words.  See TC1 notes. 
-# Examples:
-# Look in thy glass and tell the face thou viewest, [f]
-# Now is the time that face should form another, [f]
-# Whose fresh repair if now thou not renewest, [f]
-# Thou dost beguile the world, unbless some mother. [f]
-# For where is she so fair whose uneared womb [m][open]
-# Disdains the tillage of thy husbandry? [m] # the program thinks husbandry is feminine, because of the -ry ending
-
-# Ieva's strategy for FEM endings counting:
-# if an ending word or ending is on 
-# either 
-# the feminine ending list 
-# or the feminine-ending word list
-# and 
-# not on either the masculine-ending 
-# nor the masculine word list, 
-# it counts as feminine. 
+from tkinter.filedialog import askopenfilenames, asksaveasfilename # to open files and save a file
 
 class FemEnd(object):
     def __init__(self):
@@ -70,7 +44,6 @@ class FemEnd(object):
         self.text = f.read()
         self.text = self.text.lower()
         f.close()
-        
 
     def countLines(self):
         ''' count the number of lines in a text '''
@@ -138,7 +111,6 @@ class FemEnd(object):
                 if (word not in MASCWORD) and not (word.endswith(MASCEND)):
                     self.numFemEnds += 1
 
-
     def countLongLines(self):
         ''' count lines with 11 syllables,
             also known as hendecasyllables
@@ -146,45 +118,34 @@ class FemEnd(object):
         # TODO optional, because this will be slower than countFemEnds
 
 
+class GUI(self):
+    def __init__(self):
+        '''create empty GUI '''
+        self.window = tk.Tk()
+        self.fileNames = ''
+
+    def getFiles(self):
+        ''' return filenames '''
+        #TODO
+
+    def runProgram():
+        ''' code to run the logic of lineEndings '''
+        analysis = FemEnd()
+        analysis.readTextFromFile(fileNames) #TODO change this
+        analysis.countLines()
+        analysis.countOpenLines()
+        analysis.countFemEnds()
+        repr(analysis)
 
 
-
-# if __name__ == "__main__":
-    
-def runProgram():
-    ''' code to run the logic of lineEndings '''
-    analysis = FemEnd()
-    analysis.readTextFromFile(inputText)
-    analysis.countLines()
-    analysis.countOpenLines()
-    analysis.countFemEnds()
-    msg.setText(repr(analysis))
+    fileNames = askopenfilenames() # get the names of the files to open
+    print(fileNames)
+    # saveName = asksaveasfilename() 
 
 
-# create window
-app = QApplication([])
+def main():
+    # TODO
 
-window = QWidget()
-window.setWindowTitle('lineEndings')
 
-layout = QVBoxLayout()
-
-# TODO: saving output (in an excel spreadsheet?)
-# formLayout = QFormLayout()
-# formLayout.addRow('Save Name:', QLineEdit())
-# inputText = 'TGVVS.txt'
-# layout.addLayout(formLayout)
-
-# add a button
-btn = QPushButton('Run')
-A = btn.clicked.connect(runProgram) 
-layout.addWidget(btn)
-
-# print output
-msg = QLabel('')
-layout.addWidget(msg)
-
-window.setLayout(layout)
-window.show()
-
-app.exec_()
+if __name__ == "__main__":
+    main()    
