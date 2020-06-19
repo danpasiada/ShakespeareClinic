@@ -6,6 +6,8 @@
 # TODO: acknowledge QT
         
 import string #for string.punctuation
+import tkinter as tk
+from tkinter import Tk, Label, Button
 from tkinter.filedialog import askopenfilenames, asksaveasfilename # to open files and save a file
 
 class FemEnd(object):
@@ -118,34 +120,57 @@ class FemEnd(object):
         # TODO optional, because this will be slower than countFemEnds
 
 
-class GUI(self):
-    def __init__(self):
-        '''create empty GUI '''
-        self.window = tk.Tk()
-        self.fileNames = ''
+class FemEndGUI(tk.Frame):
+    def __init__(self, parent, *args, **kwargs):
+        '''create a GUI '''
+        tk.Frame.__init__(self, parent, *args, **kwargs)
+        self.parent = parent
+        
+        # self.master = master
+        # master.title("lineEndings")
+
+        self.label1 = Label(parent, text="1. Choose the files")
+        self.label1.pack()
+
+        self.getFiles_button = Button(parent, text="Browse", command=self.getFiles)
+        self.getFiles_button.pack()
+
+        self.label2 = Label(parent, text="2. Run program")
+        self.label2.pack()
+
+        self.run_button = Button(parent, text="Run", command=self.runProgram)
+        self.run_button.pack()
+
+        self.label3 = Label(parent, text="3. Save output")
+        self.label3.pack()
+
+        self.run_button = Button(parent, text="Save", command=self.saveProgram)
+        self.run_button.pack()
+
+        # properties that will change
+        self.fileNames = []
 
     def getFiles(self):
-        ''' return filenames '''
-        #TODO
-
-    def runProgram():
+        ''' get a list of filenames with a .txt extension'''
+        self.fileNames = askopenfilenames(filetypes=[('Text file','*.txt')]) 
+        # print(fileNames)
+        
+    def runProgram(self):
         ''' code to run the logic of lineEndings '''
         analysis = FemEnd()
-        analysis.readTextFromFile(fileNames) #TODO change this
+        analysis.readTextFromFile('test.txt') # TODO change this to read from list
         analysis.countLines()
         analysis.countOpenLines()
         analysis.countFemEnds()
-        repr(analysis)
+        # repr(analysis)
 
-
-    fileNames = askopenfilenames() # get the names of the files to open
-    print(fileNames)
-    # saveName = asksaveasfilename() 
-
-
-def main():
-    # TODO
+    def saveProgram(self):
+        ''' excel?? '''
+        #TODO
+        # saveName = asksaveasfilename() 
 
 
 if __name__ == "__main__":
-    main()    
+    root = tk.Tk()
+    FemEndGUI(root).pack(side="top", fill="both", expand=True)
+    root.mainloop()
