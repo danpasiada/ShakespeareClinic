@@ -3,9 +3,10 @@
 # purpose: counts English feminine words 
 # bugs: # the program thinks husbandry is feminine, because of the -ry ending
         # can't hande double spaces
-
+# TODO: acknowledge QT
         
 import string #for string.punctuation
+from PyQt5.QtWidgets import * #for QT
 
 # How this works:
 # 1) count lines in the text
@@ -145,11 +146,45 @@ class FemEnd(object):
         # TODO optional, because this will be slower than countFemEnds
 
 
-    #def main(self):
-        #'main' function instead of printing the below??    
-A = FemEnd()
-A.readTextFromFile('TGVVS.txt')
-A.countLines()
-A.countOpenLines()
-A.countFemEnds()
-print(A)
+
+
+
+# if __name__ == "__main__":
+    
+def runProgram():
+    ''' code to run the logic of lineEndings '''
+    analysis = FemEnd()
+    analysis.readTextFromFile(inputText)
+    analysis.countLines()
+    analysis.countOpenLines()
+    analysis.countFemEnds()
+    msg.setText(repr(analysis))
+
+
+# create window
+app = QApplication([])
+
+window = QWidget()
+window.setWindowTitle('lineEndings')
+
+layout = QVBoxLayout()
+
+# TODO: saving output (in an excel spreadsheet?)
+# formLayout = QFormLayout()
+# formLayout.addRow('Save Name:', QLineEdit())
+# inputText = 'TGVVS.txt'
+# layout.addLayout(formLayout)
+
+# add a button
+btn = QPushButton('Run')
+A = btn.clicked.connect(runProgram) 
+layout.addWidget(btn)
+
+# print output
+msg = QLabel('')
+layout.addWidget(msg)
+
+window.setLayout(layout)
+window.show()
+
+app.exec_()
