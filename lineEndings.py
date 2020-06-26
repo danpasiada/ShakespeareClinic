@@ -3,16 +3,47 @@
 # purpose: counts English feminine words 
 # bugs: # the program thinks husbandry is feminine, because of the -ry ending
         # can't hande double spaces
-# TODO: acknowledge QT
         
 import string #for string.punctuation
+import os # for .name
 import tkinter as tk
-from tkinter import Tk, Label, Button
+from tkinter import Tk, Label, Button, ttk
 from tkinter.filedialog import askopenfilenames, asksaveasfilename # to open files and save a file
+from tkinter.ttk import *
 
 class FemEnd(object):
+    # initialise endings for all instances of FemEnd 
+    def endingLists():
+        ''' create lists or tuples with FEM / MASC words or endings '''
+        f = open('FEMEND.txt')
+        FEMEND = f.read()
+        FEMEND = FEMEND.lower()
+        FEMEND = tuple(FEMEND.splitlines()) #.endswith works with tuples
+        f.close()
+
+        f = open('FemEndWordsTC1.txt')
+        FEMWORD = f.read()
+        FEMWORD = FEMWORD.lower()
+        FEMWORD = FEMWORD.splitlines()
+        f.close()
+
+        f = open('MASCEND.txt')
+        MASCEND = f.read()
+        MASCEND = MASCEND.lower()
+        MASCEND = tuple(MASCEND.splitlines())
+        f.close()
+
+        f = open('MascExceptions.txt')
+        MASCWORD = f.read()
+        MASCWORD = MASCWORD.lower()
+        MASCWORD = MASCWORD.splitlines()
+        f.close()
+        return (FEMEND, FEMWORD, MASCEND, MASCWORD)
+    ''' class variables: '''
+    FEMEND, FEMWORD, MASCEND, MASCWORD = endingLists()
+    
     def __init__(self):
-        '''create empty FemEnd '''
+        '''create instance variables for FemEnd '''
         self.text = ''
         self.lines = [] 
         self.numLines = 0
@@ -61,31 +92,6 @@ class FemEnd(object):
 
     def countFemEnds(self):
         ''' count FEM endings (strategy in the header) '''
-        # create lists or tuples with FEM / MASC words or endings
-        f = open('FEMEND.txt')
-        FEMEND = f.read()
-        FEMEND = FEMEND.lower()
-        FEMEND = tuple(FEMEND.splitlines()) #.endswith works with tuples
-        f.close()
-
-        f = open('FemEndWordsTC1.txt')
-        FEMWORD = f.read()
-        FEMWORD = FEMWORD.lower()
-        FEMWORD = FEMWORD.splitlines()
-        f.close()
-
-        f = open('MASCEND.txt')
-        MASCEND = f.read()
-        MASCEND = MASCEND.lower()
-        MASCEND = tuple(MASCEND.splitlines())
-        f.close()
-
-        f = open('MascExceptions.txt')
-        MASCWORD = f.read()
-        MASCWORD = MASCWORD.lower()
-        MASCWORD = MASCWORD.splitlines()
-        f.close()
-
         #fill the list of last words in each line
         for line in self.lines:
             # TODO: (1) find a way to delete the empty line.
@@ -108,9 +114,9 @@ class FemEnd(object):
             # strip punctuation
             word = word.translate(str.maketrans('', '', string.punctuation))
             #if the last word is a FEM word or has a FEM ending and
-            if (word in FEMWORD) or (word.endswith(FEMEND)):
+            if (word in self.FEMWORD) or (word.endswith(self.FEMEND)):
                 # and if the last word is not a MASC word and it does not have a MASC ending
-                if (word not in MASCWORD) and not (word.endswith(MASCEND)):
+                if (word not in self.MASCWORD) and not (word.endswith(self.MASCEND)):
                     self.numFemEnds += 1
 
     def countLongLines(self):
@@ -125,9 +131,9 @@ class FemEndGUI(tk.Frame):
         '''create a GUI '''
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
-        
-        # self.master = master
-        # master.title("lineEndings")
+
+        #box title
+        self.master.title('lineEndings')
 
         self.label1 = Label(parent, text="1. Choose the files")
         self.label1.pack()
@@ -147,30 +153,52 @@ class FemEndGUI(tk.Frame):
         self.run_button = Button(parent, text="Save", command=self.saveProgram)
         self.run_button.pack()
 
-        # properties that will change
-        self.fileNames = []
-
+        # instance variables for use with FemEnd
+        self.fileNames = [] # list of files
+        self.data = [] # list of FemEnd Objects
+        self.analyses = []
     def getFiles(self):
-        ''' get a list of filenames with a .txt extension'''
-        self.fileNames = askopenfilenames(filetypes=[('Text file','*.txt')]) 
-        # print(fileNames)
-        
+        ''' ask user for a list of filenames with their directory and a .txt extension'''
+        self.fileNames = askopenfilenames(filetypes=[('Text file','*.txt')])         
+        # TODO: potentially allow for other file extensions?
+
     def runProgram(self):
         ''' code to run the logic of lineEndings '''
-        analysis = FemEnd()
-        analysis.readTextFromFile('test.txt') # TODO change this to read from list
-        analysis.countLines()
-        analysis.countOpenLines()
-        analysis.countFemEnds()
-        # repr(analysis)
+        # populate the data with the names of our files (deleting the directory)
+        self.data = [os.path.basename(i) for i in self.fileNames] 
+        # delete extensions from filenames
+        self.data = [[os.path.splitext(i)[0]] for i in self.data] 
+
+        # print(self.data)
+        # self.analyses = [FemEnd() for i in self.fileNames]
+
+        # populate our data (a 2D list) with the results from analysing the text
+        for i, name in enumerate(self.data):
+            temp = FemEnd()
+            temp.readTextFromFile(self.fileNames[i]) # TODO change this to read from list
+            temp.countLines()
+            temp.countOpenLines()
+            temp.countFemEnds()
+            name += [temp]
+        print(self.data)
 
     def saveProgram(self):
         ''' excel?? '''
-        #TODO
+        #TODO with openpyxl
         # saveName = asksaveasfilename() 
 
 
 if __name__ == "__main__":
     root = tk.Tk()
+    # style = ttk.Style()
+    # style.theme_use('winnative')
     FemEndGUI(root).pack(side="top", fill="both", expand=True)
     root.mainloop()
+
+
+# A = FemEnd()
+# A.readTextFromFile('test.txt') 
+# A.countLines()
+# A.countOpenLines()
+# A.countFemEnds()
+# print(A)
