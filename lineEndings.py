@@ -179,8 +179,14 @@ class FemEndGUI(tk.Frame):
             temp.countLines()
             temp.countOpenLines()
             temp.countFemEnds()
-            name += [temp]
+            name += [temp.numLines, temp.numOpenLines, temp.numFemEnds]
+        #insert the top row (titles for each column)
+        self.data.insert(0,['Text Name','Lines','Open Lines', 'Feminine Endings'])
         print(self.data)
+
+        # print data as pure text in a GUI textbox
+
+
 
     def saveProgram(self):
         ''' excel?? '''
