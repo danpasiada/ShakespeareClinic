@@ -29,4 +29,8 @@ not on either the masculine-ending
 nor the masculine word list, 
 it counts as feminine. 
 
-TODO: get screenshots
+TODO: 
+(1) explain how to use program
+(2) explain each file 
+(3) explain each function
+(3) get screenshots
