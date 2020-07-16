@@ -16,9 +16,11 @@ from tabulate import tabulate  # pip install tabulate #(needs to be installed)
 
 
 class FemEnd(object):
-    # initialise endings for all instances of FemEnd
-    def endingLists():
-        ''' create lists or tuples with FEM / MASC words or endings '''
+    def endings():
+        ''' 
+        create lists or tuples with FEM / MASC words or endings
+        used only once 
+        '''
         f = open('FEMEND.txt')
         FEMEND = f.read()
         FEMEND = FEMEND.lower()
@@ -43,21 +45,18 @@ class FemEnd(object):
         MASCWORD = MASCWORD.splitlines()
         f.close()
         return (FEMEND, FEMWORD, MASCEND, MASCWORD)
-    ''' class variables: '''
-    FEMEND, FEMWORD, MASCEND, MASCWORD = endingLists()
+    ''' class variables for FemEnd '''
+    FEMEND, FEMWORD, MASCEND, MASCWORD = endings()
 
     def __init__(self):
-        '''create instance variables for FemEnd '''
+        ''' instance variables for FemEnd '''
         self.text = ''
         self.lines = []
         self.numLines = 0
-        self.numOpenLines = 0
-        self.numFemEnds = 0
-        self.lastWords = []
 
     def __repr__(self):
         '''
-        display contents of FemEnd by running:
+        for debugging, display contents of FemEnd by running:
         NAME = FemEnd()
         NAME.someCommand
         print(NAME)
@@ -65,14 +64,9 @@ class FemEnd(object):
         s = ''
         #s += 'Lines: ' + str(self.lines) + '\n\n'
         s += 'Number of Lines: ' + str(self.numLines) + '\n\n'
-        s += 'Number of Open Lines: ' + str(self.numOpenLines) + '\n\n'
-        s += 'Number of FemEnds: ' + str(self.numFemEnds)
-        #s += str(self.property2)
+        s += 'Number of Open Lines: ' + str(countOpenLines()) + '\n\n'
+        s += 'Number of FemEnds: ' + str(countFemEnds())
         return s
-
-    def excelOutput(self):
-        ''' output results in .xlsx spreadsheet format '''
-        # TODO: but in the common interface for all programs
 
     def readTextFromFile(self, filename):
         ''' read a text file '''
@@ -84,20 +78,31 @@ class FemEnd(object):
 
     def countLines(self):
         ''' count the number of lines in a text '''
-        self.lines = [i for i in self.text.splitlines(
-        ) if i]  # list of lines from text with empty lines removed
-        self.numLines = len(self.lines)  # number of lines in text
+        # create list of lines from text with empty lines removed
+        self.lines = [i for i in self.text.splitlines() if i]
+        # count number of lines in text
+        self.numLines = len(self.lines)  
 
     def countOpenLines(self):
-        ''' count lines without punctuation at the end'''
+        ''' 
+        count lines without punctuation at the end 
+        return a percentage of open lines 
+        '''
+        numOpenLines = 0
         for line in self.lines:
             # if the last character in a line is not a punctuation mark
             if line[-1] not in string.punctuation:
-                self.numOpenLines += 1
+                numOpenLines += 1
+        return 100*numOpenLines/self.numLines
 
     def countFemEnds(self):
-        ''' count FEM endings (strategy in the header) '''
+        ''' 
+        count FEM endings (strategy in the header) 
+        return a percentaage of FEM endings
+        '''
         # fill the list of last words in each line
+        lastWords = []
+        numFemEnds = 0
         for line in self.lines:
             # TODO: (1) find a way to delete the empty line.
             # (we tried that in  countOpenLines() with .remove(), filter(), and a list comprehension, but nothing seems to remove all of the empty lines)
@@ -105,7 +110,7 @@ class FemEnd(object):
             try:
                 temp = line.split()
                 # print(temp)
-                self.lastWords += temp[-1]
+                lastWords += temp[-1]
             except IndexError:
                 # print('')
                 # print('')
@@ -115,18 +120,20 @@ class FemEnd(object):
                 continue
 
         # logic from the header
-        for word in self.lastWords:
+        for word in lastWords:
             # strip punctuation
             word = word.translate(str.maketrans('', '', string.punctuation))
             # if the last word is a FEM word or has a FEM ending and
             if (word in self.FEMWORD) or (word.endswith(self.FEMEND)):
                 # and if the last word is not a MASC word and it does not have a MASC ending
                 if (word not in self.MASCWORD) and not (word.endswith(self.MASCEND)):
-                    self.numFemEnds += 1
+                    numFemEnds += 1
+        return 100*numFemEnds/self.numLines
 
     def countLongLines(self):
-        ''' count lines with 11 syllables,
-            also known as hendecasyllables
+        ''' 
+        count lines with 11 syllables,
+        also known as hendecasyllables
         '''
         # TODO optional, because this will be slower than countFemEnds
 
@@ -155,14 +162,14 @@ class FemEndGUI(tk.Frame):
         self.run_button.grid()
 
         # TODO: find a more open-source format, maybe CSV?
-        self.label3 = Label(parent, text="3. Save output as .xlsx")
+        self.label3 = Label(parent, text="3. Save output as .csv")
         self.label3.grid()
 
         self.save_button = Button(
             parent, text="Save", command=self.saveProgram, state='disabled')
         self.save_button.grid()
 
-        self.output = tk.Text(root, height=10, width=55, padx=3, pady=3)
+        self.output = tk.Text(root, height=10, width=63, padx=2, pady=2)
         self.output.insert(tk.END, 'Output will be shown here. \n')
 
         self.output.grid(row=0, column=1, rowspan=6, sticky='nesw')
@@ -172,7 +179,10 @@ class FemEndGUI(tk.Frame):
         self.data = []  # list of FemEnd Objects
 
     def getFiles(self):
-        ''' ask user for a list of filenames with their directory and a .txt extension'''
+        ''' 
+        ask user for a list of filenames with their directory
+        and a .txt extension
+        '''
         self.fileNames = askopenfilenames(filetypes=[('Text file', '*.txt')])
         # TODO: potentially allow for other file extensions?
         # check if user has selected files
@@ -193,10 +203,10 @@ class FemEndGUI(tk.Frame):
             # TODO change this to read from list
             temp.readTextFromFile(self.fileNames[i])
             temp.countLines()
-            temp.countOpenLines()
-            temp.countFemEnds()
-            name += [str(temp.numLines), str(temp.numOpenLines),
-                     str(temp.numFemEnds)]
+            openLines = temp.countOpenLines()
+            femEnds = temp.countFemEnds()
+            name += [str(temp.numLines), str(openLines),
+                     str(femEnds)]
         # trigger textbox output
         self.textOutput()
         # switch save_button state to normal
@@ -217,7 +227,8 @@ class FemEndGUI(tk.Frame):
 
     def saveProgram(self):
         ''' saves the output in a user-chosen directory, in csv format '''
-        fileName = asksaveasfilename(defaultextension=".csv",filetypes=[('CSV', '*.csv')])
+        fileName = asksaveasfilename(
+            defaultextension=".csv", filetypes=[('CSV', '*.csv')])
         with open(fileName, 'w', newline='') as f:
             writer = csv.writer(f)
             writer.writerows(self.data)
