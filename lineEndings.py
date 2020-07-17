@@ -1,10 +1,13 @@
 # filename: lineEndings.py
 # Author: Dan Pasiada, with inspiration from Ieva Burk and the Shakespeare Clinic
 # purpose: counts English feminine words
-# bugs: # the program thinks husbandry is feminine, because of the -ry ending
-# can't hande double spaces
+# bugs: # the program thinks husbandry is feminine, because of the -ry ending; 
+#       # EMENDs are  not counted correctly
+#       # can't hande double spaces
 
-# TODO: check what needs to be installed and how, then provide a manual on how to do that in the README
+# TODO: check what needs to be installed and how, 
+#     + provide a manual on how to do that in the README
+
 import string  # for string.punctuation
 import os  # for .name
 import csv  # for saving as a csv file
@@ -18,7 +21,7 @@ from tabulate import tabulate  # pip install tabulate #(needs to be installed)
 class FemEnd(object):
     def endings():
         ''' 
-        create lists or tuples with FEM / MASC words or endings
+        create lists or tuples with FEM / MASC endings or words
         used only once 
         '''
         f = open('FEMEND.txt')
@@ -47,7 +50,7 @@ class FemEnd(object):
         return (FEMEND, FEMWORD, MASCEND, MASCWORD)
     ''' class variables for FemEnd '''
     FEMEND, FEMWORD, MASCEND, MASCWORD = endings()
-
+    
     def __init__(self):
         ''' instance variables for FemEnd '''
         self.text = ''
@@ -57,20 +60,24 @@ class FemEnd(object):
     def __repr__(self):
         '''
         for debugging, display contents of FemEnd by running:
-        NAME = FemEnd()
-        NAME.someCommand
-        print(NAME)
+        A = FemEnd()
+        A.readTextFromFile('TAM1VS.TXT')
+        A.countLines()
+        A.countOpenLines()
+        A.countFemEnds()
+        print(A)
         '''
         s = ''
         #s += 'Lines: ' + str(self.lines) + '\n\n'
         s += 'Number of Lines: ' + str(self.numLines) + '\n\n'
-        s += 'Number of Open Lines: ' + str(countOpenLines()) + '\n\n'
-        s += 'Number of FemEnds: ' + str(countFemEnds())
+        s += 'Percent Open Lines: ' + str(self.countOpenLines()) + '\n\n'
+        s += 'Percent FemEnds: ' + str(self.countFemEnds())
         return s
 
     def readTextFromFile(self, filename):
         ''' read a text file '''
         # TODO: put this into a parent for each program?
+        # TODO: make this function clean anything between <>, {}, [] inclusive
         f = open(filename)  # , encoding = 'utf-8')
         self.text = f.read()
         self.text = self.text.lower()
@@ -110,7 +117,8 @@ class FemEnd(object):
             try:
                 temp = line.split()
                 # print(temp)
-                lastWords += temp[-1]
+                lastWords.append(temp[-1])
+                # print(lastWords)
             except IndexError:
                 # print('')
                 # print('')
@@ -128,6 +136,7 @@ class FemEnd(object):
                 # and if the last word is not a MASC word and it does not have a MASC ending
                 if (word not in self.MASCWORD) and not (word.endswith(self.MASCEND)):
                     numFemEnds += 1
+                    # print(word)
         return 100*numFemEnds/self.numLines
 
     def countLongLines(self):
