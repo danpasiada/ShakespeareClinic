@@ -1,6 +1,6 @@
-This is an modernised (Python!) adaptation of suite of text analysis software used in the Claremont McKenna Shakespeare Clinic. The programs in this repo have been tested against the data in [OXFORD BY THE NUMBERS](https://www1.cmc.edu/pages/faculty/welliott/UTConference/Oxford_by_Numbers.pdf). 
+This is an modernised (Python!) adaptation of suite of text analysis software used in the Claremont McKenna College Shakespeare Clinic. The programs in this repo have been tested against the data in [Oxford by the Numbers](https://www1.cmc.edu/pages/faculty/welliott/UTConference/Oxford_by_Numbers.pdf). 
 
-See the [history of the Clinic](https://www1.cmc.edu/pages/faculty/welliott/shakes.htm) and [Ward Elliott's selected writings](https://www1.cmc.edu/pages/faculty/welliott/select.htm) for additional information on the Shakespeare Clinic and its research. 
+See [history of the Clinic](https://www1.cmc.edu/pages/faculty/welliott/shakes.htm) and [Ward Elliott's selected writings](https://www1.cmc.edu/pages/faculty/welliott/select.htm) for additional information on the Clinic and its research. 
 
 ## posCounter2.py
 - counts unweighted differences in parts of speech between two texts
