@@ -30,13 +30,13 @@ nor the masculine word list,
 it counts as feminine. 
 
 # posCounter2
-## counts unweighted differences in parts of speech between two texts
+### counts unweighted differences in parts of speech between two texts
 
 # whileCount
-## counts amount of time 'while' is used specifically as a noun
+### counts amount of time 'while' is used specifically as a noun
 
 # Flesch-Kincaid
-## Return a Flesch Grade level score of a text
+### Return a Flesch Grade level score of a text
 
 # posCounter2
-## highlits each given string in a given file
+### highlits each given string in a given file
