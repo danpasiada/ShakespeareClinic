@@ -1,9 +1,9 @@
 This is an modernised (Python!) adaptation of suite of text analysis software used in the Claremont McKenna Shakespeare Clinic.
 
-## posCounter2
+## posCounter2.py
 - counts unweighted differences in parts of speech between two texts
 
-## whileCount
+## whileCount.py
 - counts amount of time 'while' is used specifically as a noun
 
 ## lineEndings.py
@@ -17,8 +17,8 @@ Examples:
 - For where is she so fair whose uneared womb [m][open]
 - Disdains the tillage of thy husbandry? [m] # the program currently thinks husbandry is feminine, because of the -ry ending
 
-## Flesch-Kincaid (written by Sam Ness)
+## Flesch-Kincaid.py (written by Sam Ness)
 - returns a Flesch-Kincaid grade-level score of a text
 
-## posCounter2 (written by Sam Ness)
+## kwFinderWidget.py (written by Sam Ness)
 - highlights each given string in a given file
