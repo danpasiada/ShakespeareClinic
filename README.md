@@ -1,15 +1,27 @@
-# LineEndings
-## counts feminine-ending-word lines in a play
+This is an modernised (Python!) adaptation of suite of text analysis software used in the Claremont McKenna Shakespeare Clinic
 
-This is an adaptation of a Claremont McKenna Shakespeare Clinic program 
+## lineEndings.py
+- counts feminine-ending-word lines in a play
 
 How this works:
 1) count lines in the text
 2) count open lines -- i.e. no punctuation at the end 
 3) count FEM endings -- i.e. words that end an iambic pentameter (I-5) line on an unstressed syllable, taDA, taDA, taDA, taDA, taDAda. (i.e. an 11th syllable) 
 
+## posCounter2
+- counts unweighted differences in parts of speech between two texts
 
-Strategy for FEM endings counting:  
+## whileCount
+- counts amount of time 'while' is used specifically as a noun
+
+## Flesch-Kincaid
+- returns a Flesch-Kincaid grade-level score of a text
+
+## posCounter2
+- highlights each given string in a given file
+
+
+### Strategy for FEM endings counting:  
 ask if text contains specified feminine endings (FEMEND) or feminine words (FEMWRD) which are not listed among masculine-ending (MASCEND) or masculine-word exceptions, report % of feminine words.  See TC1 notes. 
 Examples:
 - Look in thy glass and tell the face thou viewest, [f]
@@ -18,25 +30,3 @@ Examples:
 - Thou dost beguile the world, unbless some mother. [f]
 - For where is she so fair whose uneared womb [m][open]
 - Disdains the tillage of thy husbandry? [m] # the program thinks husbandry is feminine, because of the -ry ending
-
-Ieva's strategy for FEM endings counting:
-if an ending word or ending is on 
-either 
-the feminine ending list 
-or the feminine-ending word list
-and 
-not on either the masculine-ending 
-nor the masculine word list, 
-it counts as feminine. 
-
-# posCounter2
-### counts unweighted differences in parts of speech between two texts
-
-# whileCount
-### counts amount of time 'while' is used specifically as a noun
-
-# Flesch-Kincaid
-### Return a Flesch Grade level score of a text
-
-# posCounter2
-### highlits each given string in a given file
