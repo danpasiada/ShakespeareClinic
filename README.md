@@ -29,8 +29,14 @@ not on either the masculine-ending
 nor the masculine word list, 
 it counts as feminine. 
 
-TODO: 
-(1) explain how to use program
-(2) explain each file 
-(3) explain each function
-(3) get screenshots
+# posCounter2
+## counts unweighted differences in parts of speech between two texts
+
+# whileCount
+## counts amount of time 'while' is used specifically as a noun
+
+# Flesch-Kincaid
+## Return a Flesch Grade level score of a text
+
+# posCounter2
+## highlits each given string in a given file
